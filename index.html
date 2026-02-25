@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Generador Diamante</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* VIDEO FONDO (CLARO, SIN OSCURECER) */
+.video-bg{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* BOTÓN DIAMANTE */
+.btn-diamond{
+  position: fixed;
+  width: 120px;
+  cursor: grab;
+  z-index: 1000;
+  transition: transform .15s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+  left: 20px;
+  top: 40%;
+}
+
+.btn-diamond:active{
+  cursor: grabbing;
+  transform: scale(0.97);
+  opacity: 1;
+  filter: none;
+}
+
+/* CONTENEDOR MODAL (SIN FONDO OSCURO) */
+.modal{
+  position: fixed;
+  inset: 0;
+  display: none;
+  pointer-events: none;
+}
+
+/* VENTANA EMERGENTE PROFESIONAL (SÓLIDA) */
+.modal-content{
+  position: absolute;
+  width: 380px;
+  background: #0b1220; /* sólido, nada transparente */
+  border-radius: 16px;
+  padding: 22px;
+  color: white;
+  border: 2px solid #00e5ff;
+  box-shadow: 
+    0 10px 30px rgba(0,0,0,0.9),
+    0 0 25px rgba(0,229,255,0.25);
+  animation: aparecer .25s ease;
+  pointer-events: auto;
+}
+
+/* BARRA SUPERIOR ESTILO APP */
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 10px;
+}
+
+.header-title{
+  font-size: 18px;
+  font-weight: bold;
+  color: #00e5ff;
+  letter-spacing: 1px;
+}
+
+.status{
+  font-size: 11px;
+  color: #22c55e;
+  font-weight: bold;
+}
+
+/* BOTÓN CERRAR */
+.close{
+  cursor:pointer;
+  font-size:18px;
+  color:#9ca3af;
+  transition:.2s;
+}
+
+.close:hover{
+  color:#ff4d4d;
+  transform: scale(1.2);
+}
+
+/* LISTA DE OPCIONES */
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background: #020617;
+  padding:14px 16px;
+  border-radius:12px;
+  margin:12px 0;
+  border: 1px solid #1e293b;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all .2s ease;
+  position: relative;
+}
+
+/* EFECTO INTERACTIVO HOVER */
+.item:hover{
+  border-color: #00e5ff;
+  transform: translateX(4px);
+  box-shadow: 0 0 12px rgba(0,229,255,0.25);
+}
+
+/* TEXTO DIAMANTE */
+.diamond-label{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* SWITCH MODERNO */
+.switch{
+  position:relative;
+  width:48px;
+  height:24px;
+}
+
+.switch input{
+  display:none;
+}
+
+.slider{
+  position:absolute;
+  background:#374151;
+  border-radius:20px;
+  width:100%;
+  height:100%;
+  transition:.3s;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  width:20px;
+  height:20px;
+  top:2px;
+  left:2px;
+  background:white;
+  border-radius:50%;
+  transition:.3s;
+}
+
+input:checked + .slider{
+  background:#00e5ff;
+  box-shadow: 0 0 10px #00e5ff;
+}
+
+input:checked + .slider:before{
+  transform:translateX(24px);
+}
+
+/* BOTÓN GENERAR PREMIUM */
+.generate-btn{
+  width:100%;
+  margin-top:18px;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:bold;
+  letter-spacing:1px;
+  color:#001018;
+  background: linear-gradient(90deg,#00e5ff,#00bcd4);
+  cursor:pointer;
+  transition: all .25s ease;
+}
+
+.generate-btn:hover{
+  transform: scale(1.03);
+  box-shadow: 0 0 18px rgba(0,229,255,0.6);
+}
+
+.generate-btn:active{
+  transform: scale(0.98);
+}
+
+/* BARRA DE PROGRESO INTERACTIVA */
+.progress{
+  width:100%;
+  height:8px;
+  background:#020617;
+  border-radius:10px;
+  margin-top:12px;
+  overflow:hidden;
+  border:1px solid #1e293b;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:#00e5ff;
+  transition: width 0.4s ease;
+}
+
+/* ANIMACIÓN */
+@keyframes aparecer{
+  from{opacity:0; transform:scale(0.92);}
+  to{opacity:1; transform:scale(1);}
+}
+</style>
+</head>
+
+<body>
+
+<video autoplay muted loop playsinline class="video-bg">
+  <source src="IMG_4954.MOV" type="video/mp4">
+</video>
+
+<img src="DIAMANTE.png"
+     class="btn-diamond"
+     id="diamondBtn"
+     alt="Abrir Generador">
+
+<div class="modal" id="modal">
+  <div class="modal-content" id="modalBox">
+
+    <div class="header">
+      <div class="header-title">GENERADOR DIAMANTE</div>
+      <div class="close" onclick="closeModal()">✖</div>
+    </div>
+
+    <div class="status">● SISTEMA ACTIVO</div>
+
+    <div class="item">
+      <div class="diamond-label">💎 95,000</div>
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="item">
+      <div class="diamond-label">💎 75,000</div>
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="item">
+      <div class="diamond-label">💎 50,000</div>
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="item">
+      <div class="diamond-label">💎 25,000</div>
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <button class="generate-btn" onclick="simulateGeneration()">⚡ GENERAR</button>
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const btn = document.getElementById("diamondBtn");
+const modal = document.getElementById("modal");
+const modalBox = document.getElementById("modalBox");
+const progressBar = document.getElementById("progressBar");
+
+let isDragging = false;
+let hasMoved = false;
+let offsetX, offsetY;
+
+/* ABRIR VENTANA AL LADO DEL BOTÓN */
+btn.addEventListener("click", () => {
+  if (!hasMoved) {
+    const rect = btn.getBoundingClientRect();
+    modal.style.display = "block";
+    modalBox.style.left = (rect.right + 15) + "px";
+    modalBox.style.top = rect.top + "px";
+  }
+  hasMoved = false;
+});
+
+function closeModal(){
+  modal.style.display = "none";
+  progressBar.style.width = "0%";
+}
+
+/* SIMULACIÓN INTERACTIVA */
+function simulateGeneration(){
+  progressBar.style.width = "0%";
+  let width = 0;
+  const interval = setInterval(()=>{
+    if(width >= 100){
+      clearInterval(interval);
+    } else {
+      width += 10;
+      progressBar.style.width = width + "%";
+    }
+  }, 120);
+}
+
+/* DRAG DEL BOTÓN */
+btn.addEventListener("mousedown", (e)=>{
+  isDragging = true;
+  hasMoved = false;
+  offsetX = e.clientX - btn.offsetLeft;
+  offsetY = e.clientY - btn.offsetTop;
+});
+
+document.addEventListener("mousemove", (e)=>{
+  if(isDragging){
+    hasMoved = true;
+    btn.style.left = (e.clientX - offsetX) + "px";
+    btn.style.top = (e.clientY - offsetY) + "px";
+  }
+});
+
+document.addEventListener("mouseup", ()=>{
+  isDragging = false;
+});
+</script>
+
+</body>
+</html>
