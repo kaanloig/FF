@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generador Diamante</title>
 
 <style>
@@ -9,131 +10,132 @@
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family:'Segoe UI',Arial,sans-serif;
 }
 
-/* VIDEO FONDO (CLARO, SIN OSCURECER) */
+/* VIDEO FONDO */
 .video-bg{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:-1;
 }
 
-/* BOTÓN DIAMANTE */
+/* BOTÓN DIAMANTE (DRAG PC + MÓVIL) */
 .btn-diamond{
-  position: fixed;
-  width: 120px;
-  cursor: grab;
-  z-index: 1000;
-  transition: transform .15s ease;
-  user-select: none;
-  -webkit-user-drag: none;
-  left: 20px;
-  top: 40%;
+  position:fixed;
+  width:110px;
+  cursor:grab;
+  z-index:1000;
+  left:20px;
+  top:40%;
+  user-select:none;
+  touch-action:none;
+  transition:transform .15s ease;
 }
 
 .btn-diamond:active{
-  cursor: grabbing;
-  transform: scale(0.97);
-  opacity: 1;
-  filter: none;
+  cursor:grabbing;
+  transform:scale(0.95);
 }
 
-/* CONTENEDOR MODAL (SIN FONDO OSCURO) */
+/* MODAL */
 .modal{
-  position: fixed;
-  inset: 0;
-  display: none;
-  pointer-events: none;
+  position:fixed;
+  inset:0;
+  display:none;
+  pointer-events:none;
 }
 
-/* VENTANA EMERGENTE PROFESIONAL (SÓLIDA) */
+/* VENTANA */
 .modal-content{
-  position: absolute;
-  width: 380px;
-  background: #0b1220; /* sólido, nada transparente */
-  border-radius: 16px;
-  padding: 22px;
-  color: white;
-  border: 2px solid #00e5ff;
-  box-shadow: 
+  position:absolute;
+  width:380px;
+  max-width:95%;
+  background:#0b1220;
+  border-radius:16px;
+  padding:22px;
+  color:white;
+  border:2px solid #00e5ff;
+  box-shadow:
     0 10px 30px rgba(0,0,0,0.9),
     0 0 25px rgba(0,229,255,0.25);
-  animation: aparecer .25s ease;
-  pointer-events: auto;
+  animation:aparecer .25s ease;
+  pointer-events:auto;
 }
 
-/* BARRA SUPERIOR ESTILO APP */
+/* RESPONSIVE MÓVIL */
+@media(max-width:768px){
+  .modal-content{
+    position:fixed;
+    left:0 !important;
+    top:auto !important;
+    bottom:0;
+    width:100%;
+    max-width:100%;
+    border-radius:20px 20px 0 0;
+    animation:aparecer .3s ease;
+  }
+
+  .btn-diamond{
+    width:85px;
+  }
+}
+
+/* HEADER */
 .header{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-  border-bottom: 1px solid #1f2937;
-  padding-bottom: 10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+  border-bottom:1px solid #1f2937;
+  padding-bottom:10px;
 }
 
 .header-title{
-  font-size: 18px;
-  font-weight: bold;
-  color: #00e5ff;
-  letter-spacing: 1px;
+  font-size:18px;
+  font-weight:bold;
+  color:#00e5ff;
 }
 
-.status{
-  font-size: 11px;
-  color: #22c55e;
-  font-weight: bold;
-}
-
-/* BOTÓN CERRAR */
 .close{
   cursor:pointer;
   font-size:18px;
   color:#9ca3af;
-  transition:.2s;
 }
 
 .close:hover{
   color:#ff4d4d;
-  transform: scale(1.2);
 }
 
-/* LISTA DE OPCIONES */
+/* ITEMS */
 .item{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background: #020617;
+  background:#020617;
   padding:14px 16px;
   border-radius:12px;
   margin:12px 0;
-  border: 1px solid #1e293b;
-  font-weight: 600;
-  font-size: 15px;
-  transition: all .2s ease;
-  position: relative;
+  border:1px solid #1e293b;
+  font-weight:600;
+  transition:.2s;
 }
 
-/* EFECTO INTERACTIVO HOVER */
 .item:hover{
-  border-color: #00e5ff;
-  transform: translateX(4px);
-  box-shadow: 0 0 12px rgba(0,229,255,0.25);
+  border-color:#00e5ff;
+  transform:translateX(4px);
 }
 
-/* TEXTO DIAMANTE */
 .diamond-label{
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
-/* SWITCH MODERNO */
+/* SWITCH */
 .switch{
   position:relative;
   width:48px;
@@ -167,14 +169,14 @@
 
 input:checked + .slider{
   background:#00e5ff;
-  box-shadow: 0 0 10px #00e5ff;
+  box-shadow:0 0 10px #00e5ff;
 }
 
 input:checked + .slider:before{
   transform:translateX(24px);
 }
 
-/* BOTÓN GENERAR PREMIUM */
+/* BOTÓN GENERAR */
 .generate-btn{
   width:100%;
   margin-top:18px;
@@ -183,23 +185,16 @@ input:checked + .slider:before{
   border-radius:12px;
   font-size:16px;
   font-weight:bold;
-  letter-spacing:1px;
   color:#001018;
-  background: linear-gradient(90deg,#00e5ff,#00bcd4);
+  background:linear-gradient(90deg,#00e5ff,#00bcd4);
   cursor:pointer;
-  transition: all .25s ease;
+  transition:.25s;
 }
 
 .generate-btn:hover{
-  transform: scale(1.03);
-  box-shadow: 0 0 18px rgba(0,229,255,0.6);
+  transform:scale(1.03);
 }
 
-.generate-btn:active{
-  transform: scale(0.98);
-}
-
-/* BARRA DE PROGRESO INTERACTIVA */
 .progress{
   width:100%;
   height:8px;
@@ -214,12 +209,11 @@ input:checked + .slider:before{
   height:100%;
   width:0%;
   background:#00e5ff;
-  transition: width 0.4s ease;
+  transition:width .4s ease;
 }
 
-/* ANIMACIÓN */
 @keyframes aparecer{
-  from{opacity:0; transform:scale(0.92);}
+  from{opacity:0; transform:scale(.9);}
   to{opacity:1; transform:scale(1);}
 }
 </style>
@@ -231,10 +225,7 @@ input:checked + .slider:before{
   <source src="IMG_4954.MOV" type="video/mp4">
 </video>
 
-<img src="DIAMANTE.png"
-     class="btn-diamond"
-     id="diamondBtn"
-     alt="Abrir Generador">
+<img src="DIAMANTE.png" class="btn-diamond" id="diamondBtn">
 
 <div class="modal" id="modal">
   <div class="modal-content" id="modalBox">
@@ -244,41 +235,28 @@ input:checked + .slider:before{
       <div class="close" onclick="closeModal()">✖</div>
     </div>
 
-    <div class="status">● SISTEMA ACTIVO</div>
-
     <div class="item">
       <div class="diamond-label">💎 95,000</div>
-      <label class="switch">
-        <input type="checkbox">
-        <span class="slider"></span>
-      </label>
+      <label class="switch"><input type="checkbox"><span class="slider"></span></label>
     </div>
 
     <div class="item">
       <div class="diamond-label">💎 75,000</div>
-      <label class="switch">
-        <input type="checkbox">
-        <span class="slider"></span>
-      </label>
+      <label class="switch"><input type="checkbox"><span class="slider"></span></label>
     </div>
 
     <div class="item">
       <div class="diamond-label">💎 50,000</div>
-      <label class="switch">
-        <input type="checkbox">
-        <span class="slider"></span>
-      </label>
+      <label class="switch"><input type="checkbox"><span class="slider"></span></label>
     </div>
 
     <div class="item">
       <div class="diamond-label">💎 25,000</div>
-      <label class="switch">
-        <input type="checkbox">
-        <span class="slider"></span>
-      </label>
+      <label class="switch"><input type="checkbox"><span class="slider"></span></label>
     </div>
 
     <button class="generate-btn" onclick="simulateGeneration()">⚡ GENERAR</button>
+
     <div class="progress">
       <div class="progress-bar" id="progressBar"></div>
     </div>
@@ -292,59 +270,72 @@ const modal = document.getElementById("modal");
 const modalBox = document.getElementById("modalBox");
 const progressBar = document.getElementById("progressBar");
 
-let isDragging = false;
-let hasMoved = false;
-let offsetX, offsetY;
+let isDragging=false, offsetX=0, offsetY=0;
 
-/* ABRIR VENTANA AL LADO DEL BOTÓN */
-btn.addEventListener("click", () => {
-  if (!hasMoved) {
-    const rect = btn.getBoundingClientRect();
-    modal.style.display = "block";
-    modalBox.style.left = (rect.right + 15) + "px";
-    modalBox.style.top = rect.top + "px";
+/* ABRIR MODAL */
+btn.addEventListener("click",()=>{
+  if(!isDragging){
+    modal.style.display="block";
+
+    if(window.innerWidth>768){
+      const rect=btn.getBoundingClientRect();
+      modalBox.style.left=(rect.right+15)+"px";
+      modalBox.style.top=rect.top+"px";
+    }
   }
-  hasMoved = false;
 });
 
 function closeModal(){
-  modal.style.display = "none";
-  progressBar.style.width = "0%";
+  modal.style.display="none";
+  progressBar.style.width="0%";
 }
 
-/* SIMULACIÓN INTERACTIVA */
+/* PROGRESO */
 function simulateGeneration(){
-  progressBar.style.width = "0%";
-  let width = 0;
-  const interval = setInterval(()=>{
-    if(width >= 100){
-      clearInterval(interval);
-    } else {
-      width += 10;
-      progressBar.style.width = width + "%";
+  let width=0;
+  progressBar.style.width="0%";
+  const interval=setInterval(()=>{
+    if(width>=100){clearInterval(interval);}
+    else{
+      width+=10;
+      progressBar.style.width=width+"%";
     }
-  }, 120);
+  },120);
 }
 
-/* DRAG DEL BOTÓN */
-btn.addEventListener("mousedown", (e)=>{
-  isDragging = true;
-  hasMoved = false;
-  offsetX = e.clientX - btn.offsetLeft;
-  offsetY = e.clientY - btn.offsetTop;
+/* DRAG PC */
+btn.addEventListener("mousedown",(e)=>{
+  isDragging=true;
+  offsetX=e.clientX-btn.offsetLeft;
+  offsetY=e.clientY-btn.offsetTop;
 });
 
-document.addEventListener("mousemove", (e)=>{
+document.addEventListener("mousemove",(e)=>{
   if(isDragging){
-    hasMoved = true;
-    btn.style.left = (e.clientX - offsetX) + "px";
-    btn.style.top = (e.clientY - offsetY) + "px";
+    btn.style.left=(e.clientX-offsetX)+"px";
+    btn.style.top=(e.clientY-offsetY)+"px";
   }
 });
 
-document.addEventListener("mouseup", ()=>{
-  isDragging = false;
+document.addEventListener("mouseup",()=>isDragging=false);
+
+/* DRAG MÓVIL */
+btn.addEventListener("touchstart",(e)=>{
+  isDragging=true;
+  const touch=e.touches[0];
+  offsetX=touch.clientX-btn.offsetLeft;
+  offsetY=touch.clientY-btn.offsetTop;
 });
+
+document.addEventListener("touchmove",(e)=>{
+  if(isDragging){
+    const touch=e.touches[0];
+    btn.style.left=(touch.clientX-offsetX)+"px";
+    btn.style.top=(touch.clientY-offsetY)+"px";
+  }
+});
+
+document.addEventListener("touchend",()=>isDragging=false);
 </script>
 
 </body>
